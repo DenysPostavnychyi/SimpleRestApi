@@ -2,14 +2,18 @@ package com.example.service;
 
 import com.example.model.Column;
 import com.example.repository.ColumnRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ColumnServiceImpl implements ColumnService {
 
-  @Autowired
-  ColumnRepository columnRepository;
+  private final ColumnRepository columnRepository;
+
+  public ColumnServiceImpl(ColumnRepository columnRepository) {
+    this.columnRepository = columnRepository;
+  }
 
   @Override
   public void create(Column column) {
@@ -17,13 +21,19 @@ public class ColumnServiceImpl implements ColumnService {
   }
 
   @Override
-  public boolean changeName(int sequenceNumber, String name) {
-    return true;
+  public List<Column> getAll() {
+    return columnRepository.findAll();
   }
 
   @Override
-  public boolean delete(Integer sequenceNumber) {
-    return columnRepository.delete(sequenceNumber);
+  public void changeName(Column column, String name) {
+    column.setName(name);
+    columnRepository.save(column);
+  }
+
+  @Override
+  public void delete(Column column) {
+    columnRepository.delete(column);
   }
 
   @Override

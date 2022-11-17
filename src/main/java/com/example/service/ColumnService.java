@@ -2,12 +2,16 @@ package com.example.service;
 
 import com.example.model.Column;
 
+import java.util.List;
+
 public interface ColumnService {
   void create(Column column);
 
-  boolean changeName(int sequenceNumber, String name);
+  List<Column> getAll();
 
-  boolean delete(Integer sequenceNumber);
+  void changeName(Column column, String name);
+
+  void delete(Column column);
 
   void changeOrder(int currentSequenceNumber, int newSequenceNumber);
 }

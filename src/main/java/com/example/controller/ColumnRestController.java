@@ -2,38 +2,62 @@ package com.example.controller;
 
 import com.example.model.Column;
 import com.example.service.ColumnService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
+@RequestMapping("/board/")
 public class ColumnRestController {
 
-  @Autowired
-  private ColumnService columnService;
+  private final ColumnService columnService;
 
-  @RequestMapping(value = "/columns")
-  public ResponseEntity<?> create(@RequestBody Column column){
+  public ColumnRestController(ColumnService columnService) {
+    this.columnService = columnService;
+  }
+
+  @GetMapping(value = "")
+  public ResponseEntity<List<Column>> getAllCustomers() {
+    List<Column> customers = columnService.getAll();
+
+    if (customers.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    return new ResponseEntity<>(customers, HttpStatus.OK);
+  }
+
+  @PostMapping(value = "")
+  public ResponseEntity<?> createColumn(@RequestBody Column column){
+    if (column == null) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     columnService.create(column);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
-  @PutMapping(value = "/columns/{id}")
-  public ResponseEntity<?> update(@PathVariable(name = "id") int id, @RequestBody String name) {
-    final boolean updated = columnService.changeName(id, name);
+  @PutMapping(value = "/{name}")
+  public ResponseEntity<?> changeColumnName(@RequestBody Column column, @PathVariable(name = "name") String name) {
+    if (column == null || name == null) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
-    return updated
-        ? new ResponseEntity<>(HttpStatus.OK)
-        : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    columnService.changeName(column, name);
+
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @DeleteMapping(value = "/columns/{id}")
-  public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
-    final boolean deleted = columnService.delete(id);
+  @DeleteMapping(value = "")
+  public ResponseEntity<?> delete(@RequestBody Column column) {
+    if (column == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
-    return deleted
-        ? new ResponseEntity<>(HttpStatus.OK)
-        : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    columnService.delete(column);
+
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }
