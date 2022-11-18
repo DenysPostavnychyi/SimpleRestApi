@@ -1,10 +1,10 @@
 package com.example.service;
 
+import java.util.List;
+
 import com.example.model.Task;
 import com.example.repository.TaskRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {

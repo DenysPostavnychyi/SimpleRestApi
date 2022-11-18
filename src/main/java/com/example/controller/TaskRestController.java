@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import java.util.List;
+
 import com.example.model.Task;
 import com.example.service.TaskService;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/board/column/")
@@ -37,7 +38,7 @@ public class TaskRestController {
   }
 
   @PostMapping(value = "")
-  public ResponseEntity<?> addTask(@RequestBody Task task){
+  public ResponseEntity<?> addTask(@RequestBody Task task) {
     if (task == null) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -47,8 +48,8 @@ public class TaskRestController {
   }
 
   @PutMapping(value = "/{id}")
-  public ResponseEntity<?> editTaskById
-      (@RequestBody Task task, @PathVariable(name = "id") Long id) {
+  public ResponseEntity<?> editTaskById(@RequestBody Task task,
+                                        @PathVariable(name = "id") Long id) {
     if (task == null || id == null) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

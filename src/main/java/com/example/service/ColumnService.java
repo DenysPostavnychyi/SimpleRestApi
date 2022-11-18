@@ -1,8 +1,8 @@
 package com.example.service;
 
-import com.example.model.Column;
-
 import java.util.List;
+
+import com.example.model.Column;
 
 public interface ColumnService {
   void create(Column column);

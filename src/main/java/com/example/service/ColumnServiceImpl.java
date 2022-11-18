@@ -1,10 +1,10 @@
 package com.example.service;
 
+import java.util.List;
+
 import com.example.model.Column;
 import com.example.repository.ColumnRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ColumnServiceImpl implements ColumnService {

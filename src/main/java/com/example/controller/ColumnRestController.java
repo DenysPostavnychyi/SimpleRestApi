@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import java.util.List;
+
 import com.example.model.Column;
 import com.example.service.ColumnService;
 import org.springframework.http.HttpStatus;
@@ -12,8 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/board/")
@@ -37,7 +37,7 @@ public class ColumnRestController {
   }
 
   @PostMapping(value = "")
-  public ResponseEntity<?> createColumn(@RequestBody Column column){
+  public ResponseEntity<?> createColumn(@RequestBody Column column) {
     if (column == null) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -47,7 +47,8 @@ public class ColumnRestController {
   }
 
   @PutMapping(value = "/{name}")
-  public ResponseEntity<?> changeColumnName(@RequestBody Column column, @PathVariable(name = "name") String name) {
+  public ResponseEntity<?> changeColumnName(@RequestBody Column column,
+                                            @PathVariable(name = "name") String name) {
     if (column == null || name == null) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

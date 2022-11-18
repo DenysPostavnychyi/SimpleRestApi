@@ -1,8 +1,8 @@
 package com.example.service;
 
-import com.example.model.Task;
-
 import java.util.List;
+
+import com.example.model.Task;
 
 public interface TaskService {
   void add(Task task);
