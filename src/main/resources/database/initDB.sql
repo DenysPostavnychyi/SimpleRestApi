@@ -7,8 +7,8 @@ CREATE TABLE columns
 CREATE TABLE tasks
 (
     id             SERIAL,
-    columns_id     SERIAL       NOT NULL REFERENCES columns (id) ON DELETE CASCADE,
+    column_id     SERIAL       NOT NULL REFERENCES columns (id) ON DELETE CASCADE,
     name           TEXT         NOT NULL,
     description    TEXT         NOT NULL,
-    dateOfCreation varchar(256) NOT NULL
+    date_of_creation varchar(256) NOT NULL
 );
