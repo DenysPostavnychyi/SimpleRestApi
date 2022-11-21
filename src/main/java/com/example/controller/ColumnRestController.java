@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/board/")
+@RequestMapping("/columns")
 public class ColumnRestController {
-
   private final ColumnService columnService;
 
   public ColumnRestController(ColumnService columnService) {
@@ -27,16 +26,26 @@ public class ColumnRestController {
 
   @GetMapping(value = "")
   public ResponseEntity<List<Column>> getAllColumns() {
-    List<Column> customers = columnService.getAll();
+    List<Column> columns = columnService.getAll();
 
-    if (customers.isEmpty()) {
+    if (columns.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    return new ResponseEntity<>(customers, HttpStatus.OK);
+    return new ResponseEntity<>(columns, HttpStatus.OK);
   }
 
-  @PostMapping(value = "")
+  @GetMapping(value = "/{id}")
+  public ResponseEntity<Column> getColumnById(@PathVariable(name = "id") Long id) {
+    if (id == null) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    Column column = columnService.getById(id);
+    return new ResponseEntity<>(column, HttpStatus.OK);
+  }
+
+  @PostMapping(value = "/create")
   public ResponseEntity<?> createColumn(@RequestBody Column column) {
     if (column == null) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -46,7 +55,7 @@ public class ColumnRestController {
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
-  @PutMapping(value = "/{name}")
+  @PutMapping(value = "/newName/{name}")
   public ResponseEntity<?> changeColumnName(@RequestBody Column column,
                                             @PathVariable(name = "name") String name) {
     if (column == null || name == null) {
@@ -54,18 +63,27 @@ public class ColumnRestController {
     }
 
     columnService.changeName(column, name);
-
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @DeleteMapping(value = "")
+  @PutMapping(value = "/newSequenceNumber/{num}")
+  public ResponseEntity<?> changeColumnSequenceNumber(@RequestBody Column column,
+                                                      @PathVariable(name = "num") Integer num) {
+    if (column == null || num == null) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    columnService.changeSequenceNumber(column, num);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @DeleteMapping(value = "/delete")
   public ResponseEntity<?> delete(@RequestBody Column column) {
     if (column == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     columnService.delete(column);
-
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }
