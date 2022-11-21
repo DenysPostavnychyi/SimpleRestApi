@@ -2,7 +2,6 @@ package com.example.model;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,10 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 
 @Entity
 @Getter
@@ -32,10 +28,11 @@ public class Task {
   private String description;
 
   @javax.persistence.Column(name = "date_of_creation")
-  private final LocalDate dateOfCreation = LocalDate.now();
+  private LocalDate dateOfCreation;
 
-  @ManyToOne
-  @JoinColumn(name = "column_id")
-  @JsonBackReference
-  private Column column;
+  @javax.persistence.Column(name = "sequence_number")
+  private int sequenceNumber;
+
+  @javax.persistence.Column(name = "column_id")
+  private int columnNumber;
 }

@@ -1,17 +1,10 @@
 package com.example.model;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,7 +19,11 @@ public class Column {
   @javax.persistence.Column(name = "name")
   private String name;
 
-  @OneToMany(mappedBy = "column")
-  @JsonManagedReference
+  @javax.persistence.Column(name = "sequence_number")
+  private int sequenceNumber;
+
+  @OneToMany
+  @JoinColumn(name = "column_id")
+  @OrderBy(value = "sequenceNumber")
   private List<Task> tasks;
 }
