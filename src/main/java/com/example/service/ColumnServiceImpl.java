@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ColumnServiceImpl implements ColumnService {
-
   private final ColumnRepository columnRepository;
 
   public ColumnServiceImpl(ColumnRepository columnRepository) {
@@ -21,23 +20,27 @@ public class ColumnServiceImpl implements ColumnService {
   }
 
   @Override
+  public Column getById(Long id) {
+    return columnRepository.findById(id).get();
+  }
+
+  @Override
   public List<Column> getAll() {
-    return columnRepository.findAll();
+    return columnRepository.findAllByOrderBySequenceNumber();
   }
 
   @Override
   public void changeName(Column column, String name) {
-    column.setName(name);
-    columnRepository.save(column);
+    columnRepository.changeName(name, column.getId());
+  }
+
+  @Override
+  public void changeSequenceNumber(Column column, int sequenceNumber) {
+    columnRepository.changeSequenceNumber(sequenceNumber, column.getId());
   }
 
   @Override
   public void delete(Column column) {
     columnRepository.delete(column);
-  }
-
-  @Override
-  public void changeOrder(int currentSequenceNumber, int newSequenceNumber) {
-
   }
 }

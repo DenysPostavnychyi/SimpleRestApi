@@ -7,11 +7,13 @@ import com.example.model.Column;
 public interface ColumnService {
   void create(Column column);
 
+  Column getById(Long id);
+
   List<Column> getAll();
 
   void changeName(Column column, String name);
 
-  void delete(Column column);
+  void changeSequenceNumber(Column column, int sequenceNumber);
 
-  void changeOrder(int currentSequenceNumber, int newSequenceNumber);
+  void delete(Column column);
 }
