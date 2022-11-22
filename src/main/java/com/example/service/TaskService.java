@@ -2,14 +2,15 @@ package com.example.service;
 
 import java.util.List;
 
+import com.example.exceptions.NotFoundException;
 import com.example.model.Task;
 
 public interface TaskService {
   void add(Task task);
 
-  Task getById(Long id);
+  Task findById(Long id) throws NotFoundException;
 
-  List<Task> getAll();
+  List<Task> findAll();
 
   void edit(Task task);
 

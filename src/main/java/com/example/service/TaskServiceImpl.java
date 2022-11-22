@@ -1,10 +1,12 @@
 package com.example.service;
 
+import com.example.exceptions.NotFoundException;
 import com.example.model.Task;
 import com.example.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -20,12 +22,14 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public Task getById(Long id) {
-    return taskRepository.findById(id).get();
+  public Task findById(Long id) throws NotFoundException {
+    Optional<Task> optionalTask = taskRepository.findById(id);
+    return optionalTask.orElseThrow(
+        () -> new NotFoundException("Don`t find task by id " + id));
   }
 
   @Override
-  public List<Task> getAll() {
+  public List<Task> findAll() {
     return taskRepository.findAllByOrderBySequenceNumber();
   }
 

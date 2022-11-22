@@ -2,11 +2,19 @@ package com.example.controller;
 
 import java.util.List;
 
+import com.example.exceptions.NotFoundException;
 import com.example.model.Task;
 import com.example.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/tasks")
@@ -19,8 +27,8 @@ public class TaskRestController {
   }
 
   @GetMapping(value = "")
-  public ResponseEntity<List<Task>> getAllColumns() {
-    List<Task> columns = taskService.getAll();
+  public ResponseEntity<List<Task>> findAllColumns() {
+    List<Task> columns = taskService.findAll();
 
     if (columns.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -30,12 +38,13 @@ public class TaskRestController {
   }
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity<Task> getColumnById(@PathVariable(name = "id") Long id) {
+  public ResponseEntity<Task> findColumnById(@PathVariable(name = "id") Long id)
+      throws NotFoundException {
     if (id == null) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    Task column = taskService.getById(id);
+    Task column = taskService.findById(id);
     return new ResponseEntity<>(column, HttpStatus.OK);
   }
 

@@ -2,6 +2,8 @@ package com.example.controller;
 
 import java.util.List;
 
+import com.example.exceptions.BadRequestException;
+import com.example.exceptions.NotFoundException;
 import com.example.model.Column;
 import com.example.service.ColumnService;
 import org.springframework.http.HttpStatus;
@@ -25,30 +27,35 @@ public class ColumnRestController {
   }
 
   @GetMapping(value = "")
-  public ResponseEntity<List<Column>> getAllColumns() {
-    List<Column> columns = columnService.getAll();
+  public ResponseEntity<List<Column>> findAllColumns() throws NotFoundException {
+    List<Column> columns = columnService.findAll();
 
     if (columns.isEmpty()) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      throw new NotFoundException("Database don`t contains columns");
     }
 
     return new ResponseEntity<>(columns, HttpStatus.OK);
   }
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity<Column> getColumnById(@PathVariable(name = "id") Long id) {
-    if (id == null) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+  public ResponseEntity<Column> findColumnById(@PathVariable(name = "id") Long id)
+      throws BadRequestException, NotFoundException {
+    if (id == null || id == 0) {
+      throw new BadRequestException("Invalid ID");
     }
 
-    Column column = columnService.getById(id);
-    return new ResponseEntity<>(column, HttpStatus.OK);
+    Column column = columnService.findById(id);
+    return new ResponseEntity<>(column, HttpStatus.FOUND);
   }
 
   @PostMapping(value = "/create")
-  public ResponseEntity<?> createColumn(@RequestBody Column column) {
+  public ResponseEntity<?> createColumn(@RequestBody Column column)
+      throws BadRequestException {
     if (column == null) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+      throw new BadRequestException("Column from request body not found");
+    }
+    if (column.getId() == 0) {
+      throw new BadRequestException("Invalid ID");
     }
 
     columnService.create(column);
@@ -57,9 +64,13 @@ public class ColumnRestController {
 
   @PutMapping(value = "/newName/{name}")
   public ResponseEntity<?> changeColumnName(@RequestBody Column column,
-                                            @PathVariable(name = "name") String name) {
-    if (column == null || name == null) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                                            @PathVariable(name = "name") String name)
+      throws BadRequestException {
+    if (column == null) {
+      throw new BadRequestException("Column from request body not found");
+    }
+    if (name == null || name.trim().isEmpty()) {
+      throw new BadRequestException("Invalid name");
     }
 
     columnService.changeName(column, name);
@@ -68,9 +79,13 @@ public class ColumnRestController {
 
   @PutMapping(value = "/newSequenceNumber/{num}")
   public ResponseEntity<?> changeColumnSequenceNumber(@RequestBody Column column,
-                                                      @PathVariable(name = "num") Integer num) {
-    if (column == null || num == null) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                                                      @PathVariable(name = "num") Integer num)
+      throws BadRequestException {
+    if (column == null) {
+      throw new BadRequestException("Column from request body not found");
+    }
+    if (num == null || num == 0) {
+      throw new BadRequestException("Invalid sequence number");
     }
 
     columnService.changeSequenceNumber(column, num);
@@ -78,9 +93,10 @@ public class ColumnRestController {
   }
 
   @DeleteMapping(value = "/delete")
-  public ResponseEntity<?> delete(@RequestBody Column column) {
+  public ResponseEntity<?> delete(@RequestBody Column column) throws BadRequestException {
+
     if (column == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      throw new BadRequestException("Column from request body not found");
     }
 
     columnService.delete(column);

@@ -1,7 +1,9 @@
 package com.example.service;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.example.exceptions.NotFoundException;
 import com.example.model.Column;
 import com.example.repository.ColumnRepository;
 import org.springframework.stereotype.Service;
@@ -20,12 +22,14 @@ public class ColumnServiceImpl implements ColumnService {
   }
 
   @Override
-  public Column getById(Long id) {
-    return columnRepository.findById(id).get();
+  public Column findById(Long id) throws NotFoundException {
+    Optional<Column> optionalColumn = columnRepository.findById(id);
+    return optionalColumn.orElseThrow(
+        () -> new NotFoundException("Don`t find column by id " + id));
   }
 
   @Override
-  public List<Column> getAll() {
+  public List<Column> findAll() {
     return columnRepository.findAllByOrderBySequenceNumber();
   }
 
