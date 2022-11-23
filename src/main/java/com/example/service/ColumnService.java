@@ -14,7 +14,7 @@ public interface ColumnService {
 
   void changeName(Column column, String name);
 
-  void changeSequenceNumber(Column column, int sequenceNumber);
+  void changeSequenceNumber(Long id, int sequenceNumber);
 
   void delete(Column column);
 }

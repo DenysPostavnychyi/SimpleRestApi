@@ -54,9 +54,6 @@ public class ColumnRestController {
     if (column == null) {
       throw new BadRequestException("Column from request body not found");
     }
-    if (column.getId() == 0) {
-      throw new BadRequestException("Invalid ID");
-    }
 
     columnService.create(column);
     return new ResponseEntity<>(HttpStatus.CREATED);
@@ -88,7 +85,7 @@ public class ColumnRestController {
       throw new BadRequestException("Invalid sequence number");
     }
 
-    columnService.changeSequenceNumber(column, num);
+    columnService.changeSequenceNumber(column.getId(), num);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 

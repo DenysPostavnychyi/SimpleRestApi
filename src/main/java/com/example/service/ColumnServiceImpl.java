@@ -39,8 +39,32 @@ public class ColumnServiceImpl implements ColumnService {
   }
 
   @Override
-  public void changeSequenceNumber(Column column, int sequenceNumber) {
-    columnRepository.changeSequenceNumber(sequenceNumber, column.getId());
+  public void changeSequenceNumber(Long idOfColumnForChange, int newSequenceNumber) {
+    columnRepository.changeSequenceNumber(newSequenceNumber, idOfColumnForChange);
+
+    if (newSequenceNumber < idOfColumnForChange) {
+      List<Column> columns = findAll();
+      changeSequenceNumbersByAscending(columns, idOfColumnForChange, newSequenceNumber);
+    } else {
+      changeSequenceNumbersByDescending(idOfColumnForChange, newSequenceNumber);
+    }
+  }
+
+  private void changeSequenceNumbersByAscending(List<Column> columns, Long idOfColumnForChange, int newSequenceNumber) {
+    int sequenceNumber = newSequenceNumber;
+
+    for (int i = newSequenceNumber - 1; i < idOfColumnForChange - 1; i++) {
+      columnRepository.changeSequenceNumber(++sequenceNumber, columns.get(i).getId());
+    }
+  }
+
+  private void changeSequenceNumbersByDescending(Long idOfColumnForChange, int newSequenceNumber) {
+    int sequenceNumber = newSequenceNumber;
+    List<Column> columns = findAll();
+
+    for (int i = newSequenceNumber - 2; i >= idOfColumnForChange - 1; i--) {
+      columnRepository.changeSequenceNumber(--sequenceNumber, columns.get(i).getId());
+    }
   }
 
   @Override
